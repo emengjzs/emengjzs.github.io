@@ -1,13 +1,13 @@
 ---
 layout: post
-title: 语言特征与模式- λ演算 
+title: 语言特征与模式- λ演算
 ---
 
 # 语言特征与模式- λ演算
 
-## λ演算 
+## λ演算
 
-wiki定义  
+wiki定义
 > Lambda演算可以被称为最小的通用程序设计语言。它包括一条变换规则（变量替换）和一条函数定义方式，Lambda演算之通用在于，任何一个可计算函数都能用这种形式来表达和求值。因而，它是等价于图灵机的。尽管如此，Lambda演算强调的是变换规则的运用，而非实现它们的具体机器。可以认为这是一种更接近软件而非硬件的方式。
 
 
@@ -40,9 +40,9 @@ wiki定义
 ## 单位元
 
 类比实数集合中的$1$，对任意$a∈R$，均有 $ 1 *  a= a$
-λ 表达式的单位元为 
+λ 表达式的单位元为
 $$
-e = λx.x 
+e = λx.x
 $$
 有 $e\ a = ( λx.x)\ a = a$,特别的，有$ e \ e = ( λx.x)( λx.x) = ( λx.x) = e$
 
@@ -278,7 +278,7 @@ $$
 ;; 调用
 (((lambda (f) (w (Y0 f))) fac) 5) ;;15
 ```
-8. 记`Y = (lambda (f) (w (Y0 f)))` 
+8. 记`Y = (lambda (f) (w (Y0 f)))`
 ```scheme
 (define (w x) (x x))
 (define fac (lambda (g) (lambda (n) (if (= n 1) 1 (+ n (g (- n 1)))))))
@@ -326,7 +326,7 @@ $$
 - 负数、有理数的构造。（思路：和前驱算子一样，设计一个二元组，如` -5 == 0 - 5`，`0.5 = 1 / 2`）
 - 实数的构造，涉及到实数理论。
 
-##参考
+## 参考
 - λ演算，https://zh.wikipedia.org/wiki/%CE%9B%E6%BC%94%E7%AE%97
 - 神奇的λ演算，http://www.jianshu.com/p/e7db2f50b012
 - A Tutorial Introduction to the Lambda Calculu，http://www.inf.fu-berlin.de/inst/ag-ki/rojas_home/documents/tutorials/lambda.pdf
