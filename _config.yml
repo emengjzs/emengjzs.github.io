@@ -20,6 +20,7 @@ twitter_username:   emengjzs
 
 
 # Build settings
+encoding: utf-8
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
 highlighter: rouge
 # Markdown settings
@@ -38,7 +39,7 @@ anchorjs: true                          # if you want to customize anchor. check
 
 # Gems
 # from PR#40, to support local preview for Jekyll 3.0
-gems: [jekyll-paginate, rouge]
+gems: [jekyll-paginate]
 
 
 
