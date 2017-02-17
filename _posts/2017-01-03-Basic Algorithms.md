@@ -85,7 +85,7 @@ selection_sort(arr, algs::less<int>());
 
   - 先拿出（复制）一个待插入元素，这样在数组中的该元素值可以被之后的操作覆盖。
 
-    ```C++
+    ```c++
     T temp = a[i];
     ```
 
@@ -123,7 +123,7 @@ selection_sort(arr, algs::less<int>());
 
 - v2: 
 
-  ```C++
+  ```c++
   void insertion_sort(std::vector<T>& arr, const Compare<T>& cmp) {
     // Check if it is sorted.
     bool sorted = true;
