@@ -1,6 +1,10 @@
 ---
 layout: post
 title: 语言特征与模式- λ演算
+tags: 
+    - lisp
+    - lambda
+    - FP
 ---
 
 # 语言特征与模式- λ演算

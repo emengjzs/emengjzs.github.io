@@ -1,6 +1,10 @@
 ---
 layout: post
 title: 关于一些配置Tips
+tags: 
+    - tips 
+    - C++
+    - config
 ---
 
 ##  在[vscode](https://code.visualstudio.com/)上使用[cmder](http://cmder.net/)
