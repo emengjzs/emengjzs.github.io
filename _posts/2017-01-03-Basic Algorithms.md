@@ -1,4 +1,11 @@
-# Basic Algorithms
+---
+layout: post
+title: Basic Algorithms - 1
+tags: 
+    - algorithm
+---
+
+> 算法，必须把基础的部分重复再重复，不管喜不喜欢。
 
 
 
@@ -34,6 +41,7 @@
     return p;
   }
   ```
+
 
 
 
@@ -177,4 +185,3 @@ selection_sort(arr, algs::less<int>());
   ```
 
 - 三分中路. 选取一个元素，将小于的元素全部置于左边，大于元素全部置于右边，剩余相等的元素必定在中间。取两个边界less和greater，less之下的小于，greater之上的大于。小的对换时，换来的元素一定小于等于中枢元素，而大的兑换时，换来的元素未进行比较，故遍历的指针不能前进，相对的，遍历到greater边界为止即可。
-
