@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 关于一些配置Tips
+title: 关于一些琐碎配置Tips
 tags: 
     - tips 
     - C++
@@ -25,7 +25,7 @@ SET CMDER_ROOT=X:\path\to\cmder
 
 ---
 
-## 在Wndows10上使用clang编译64位简单程序
+## 在Wndows10上使用clang编译64位C++简单程序
 
 安装[clang](http://releases.llvm.org/download.html)
 
