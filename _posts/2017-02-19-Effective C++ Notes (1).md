@@ -132,13 +132,13 @@ tags:
 - C++ 和Java一个明显不同点是需要明确**对象的资源所有权**，资源一般指所占内存，也包括文件、流、锁等，**所有权决定了当对象结束使用时销毁其资源的义务**。
 
   ```c++
-  std::vector<Fruit> fruits;
+std::vector<Fruit> fruits;
   ```
 
-  ```vector```中的fruit对象的所有权属于fruits，fruits负责对fruit的资源管理义务，即fruits被销毁时，fruits销毁所有数组中的元素。
+  `vector`中的fruit对象的所有权属于fruits，fruits负责对fruit的资源管理义务，即fruits被销毁时，fruits销毁所有数组中的元素。
 
   ```c++
-  std::vector<*Fruit> fruits
+std::vector<*Fruit> fruits
   ```
 
   ```fruits```仅对```*Fruit```变量（指针）所占资源负责，fruits**不负责**对fruit的资源管理义务，即fruits被销毁时，fruits不会销毁指向的元素。对应的，应是调用的```fruits.push_back(&fruit)```的对象(或函数)拥有对```fruit```的资源管理义务。
