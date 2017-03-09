@@ -45,7 +45,7 @@
 
 
 
-## 动态代理
+# 动态代理
 
 ## InvocationHandler
 
@@ -84,3 +84,74 @@ public static <T> T proxying(T target, Class<T> iface) {
 
 [Ref] https://opencredo.com/dynamic-proxies-java-part-2/
 
+
+
+# Memory Area
+
+## 区域
+
+- 不受GC管理的内存都是native memory；受GC管理的内存叫做GC heap或者managed heap
+
+
+
+## 对象内存布局
+
+HotSpot VM:
+
+- 继承深度越浅的类所声明的字段越靠前，继承深度越深的类所声明的字段越靠后
+- 每个字段按照其宽度来对齐
+- 字段不参与多态。派生类如果声明了跟基类同名的字段，则两个字段在最终的实例中都会存在
+- 可以使用jol工具查看内存布局
+
+```
++-------------------+-------------------------+
+|                   |                         | 
+|     _mark         |      _kclass            | 
+|                   |                         | 
++-------------------+-------------------------|
+|  +----------------------------------------+ |
+|  | l/d | i/f | s/ch | byte/bool |  ref    | |
+|  +----------------------------------------+ |
+|  |      ... (extend_field)                | |
+|  +----------------------------------------+ |
++---------------------------------------------+
+```
+
+[ Ref ]
+
+- https://www.zhihu.com/question/50258991/answer/120450561
+
+
+
+## 类数据内存布局
+
+- 对象、类的元数据（InstanceKlass）、类的Java镜像，三者之间的关系：
+
+```
+Java object      InstanceKlass       Java mirror
+ [ _mark  ]                          (java.lang.Class instance)
+ [ _klass ] --> [ ...          ] <-\              
+ [ fields ]     [ _java_mirror ] --+> [ _mark  ]
+                [ ...          ]   |  [ _klass ]
+                                   |  [ fields ]
+                                    \ [ klass  ]
+```
+
+- 在JDK 7或之前的HotSpot VM里，InstanceKlass是被包装在由GC管理的klassOopDesc对象中，存放在GC堆中的所谓Permanent Generation（简称PermGen）中
+- 从JDK 8开始的HotSpot VM则完全移除了PermGen，改为在native memory里存放这些元数据。新的用于存放元数据的内存空间叫做Metaspace，InstanceKlass对象就存在这里。
+
+[ Ref ]
+
+- https://www.zhihu.com/question/50258991/answer/120450561
+
+
+
+## 静态变量
+
+- 静态变量存储在方法区中的数据区里。
+- OpenJDK6-, HotSpot VM，静态字段依附在InstanceKlass对象的末尾
+- OpenJDK7+, HotSpot VM, 静态变量存储在java.lang.Class对象末尾的隐藏字段里，而java.lang.Class对象存储在普通的Java heap里
+
+[ Ref ]
+
+- https://www.zhihu.com/question/50258991/answer/120450561
