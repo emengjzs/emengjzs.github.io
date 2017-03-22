@@ -8,6 +8,26 @@ Java中一共有四种类型的引用。StrongReference、 SoftReference、 Weak
 
 
 
+# 线程
+
+生命周期
+
+1. NEW  新建
+2. RUNNABLE 就绪，可调度
+3. RUNNING 运行
+4. DEAD 结束
+5. BLOCKED 被阻塞
+
+```
+NEW -> RUNNABLE -> RUNNING -> DEAD
+                \            \
+                 \-> BLOBKED  \
+```
+
+thread.setDaemon(true)必须在thread.start()之前设置，否则会跑出一个IllegalThreadStateException异常
+
+在Daemon线程中产生的新线程也是Daemon
+
 #  ThreadPool
 
 ## 作用
@@ -167,6 +187,12 @@ Java object      InstanceKlass       Java mirror
 - https://www.zhihu.com/question/50258991/answer/120450561
 
 
+## 常量池
+
+1.Class文件中的常量池
+
+这里面主要存放两大类常量：字面量(Literal)：文本字符串等；符号引用(Symbolic References)：属于编译原理方面的概念，包含三类常量：类和接口的全限定名(Full Qualified Name)字段的名称和描述符(Descriptor)方法的名称和描述符
+
 
 
 
@@ -185,4 +211,61 @@ Java object      InstanceKlass       Java mirror
 
 
 
+# GC
 
+Stop-the-world 会显著影响应用性能，JVM调优主要围绕这减少停顿时间为目的。
+
+一般垃圾回收算法会对堆会分代。新生代和老年代。为什么会分代？新生代用于分配快用快销的对象的内存，减少扫描区域从而减少暂停时间。
+
+当迁移到老年区的对象大小大于老年区可用内存时，将有可能引发Full GC，最为影响程序性能的操作。
+
+并发GC在减少响应时间的同时，可能会增加CPU运算开销。
+
+
+
+-XX:+UseSerialGC 使用单线程并行GC ，部分GC和全GC都是全暂停。
+
+-XX:+UseParallelOldGC 使用并行GC，部分GC和全GC都是全暂停，使用多个线程进行回收。
+
+-XX:+UseParNewGC 使用CMS GC，部分GC全暂停，全GC尽量减少暂停时间，并发标记，代价是CPU开销以及内存碎片，需要时切换为SerialGC整理内存。
+
+-XX:+UseG1GC 使用G1算法，针对大堆内存应用，实现并发显著减少老年区回收时的暂停时间。
+
+尽量不使用System.gc()，会引发Full GC，可以通过-XX:+DisableExplicitGC设置禁止调用
+
+需要Full GC的场景：
+
+- GC 算法本身触发条件
+- 做内存测试
+- 做Heap Dump
+- RMI 每小时调用http://blog.csdn.net/chenleixing/article/details/46706039
+
+
+
+
+
+
+- ConcurrentHashMap size() 实现？一致性？
+
+- 为什么编译器、CPU会对指令进行乱序？
+
+- synchronize 锁怎样实现？ 偏向锁？
+
+- ThreadLocal 会不会内存泄露，内部map实现的WeakReference？
+
+- 二级索引命中会有几次索引查询 ？？
+
+- Mysql MVCC怎么解决幻读问题？2PL？版本存储策略？间隙锁？ 和聚簇索引
+
+  的关系？
+
+- 数据库和缓存的一致性如何保证？
+
+- 结果100万数据做分页查询，查询第90万条怎样优化？
+
+  ​
+
+
+
+
+>>>>>>> note-mysql
