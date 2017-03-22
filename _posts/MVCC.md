@@ -1,10 +1,60 @@
 # MVCC
 
+目的：解决ACI。
+
+## 并发控制协议
+
+### 基于时间戳的协议 （Timestamp Ordering）
+
+https://en.wikipedia.org/wiki/Timestamp-based_concurrency_control
+
+https://www.tutorialspoint.com/dbms/dbms_concurrency_control.htm
+
+#### Thomas write rule
+
+https://en.wikipedia.org/wiki/Thomas_write_rule
+
+
+
+### 基于乐观锁的协议 （Optimistic Concurrency Control）
 
 
 
 
-## MySQL with Innodb
+
+### 二阶段协议 （Two-Phase Locking）
+
+
+
+## 版本存储实现
+
+### 追加型
+
+### 穿越型
+
+### Diff型 
+
+
+
+## 副本回收算法
+
+### 元组级
+
+###  事务级
+
+
+
+
+
+## 并发控制与二级索引
+
+
+
+
+
+## MVCC 实现
+
+### MySQL with Innodb
 
 快照读：
 
@@ -20,9 +70,13 @@
 
 对于update或者delete的数据集，其加锁过程是逐条加锁的，先读取，后加锁返回，再对数据行进行更新。
 
+## SQLLite
 
+https://sqlite.org/src4/doc/trunk/www/lsmusr.wiki#database_transactions_and_mvcc
 
+## TiDB （Optional） 
 
+https://pingcap.github.io/blog/2016/11/17/mvcc-in-tikv/
 
 
 
