@@ -60,3 +60,17 @@ TODO
 
 - 任务队列中有任务，进行一次非阻塞select （selectNowSupplier）；否则，设定为SelectStrategy.SELECT，进行可能阻塞的select任务。
 - ​
+
+
+
+
+
+##  TCP 连接步骤
+
+1. 创建为listen socket准备的ServerSocketChannel， 以及pipeline
+2. ServerSocketChannel注册到bossGroup中的selector中
+3. 触发ServerSocketChannel的channelRegistered事件
+4. 绑定socket到IP和端口
+5. 触发channelActive事件，并将ServerSocketChannel关联的selectionKey的OP_ACCEPT位置为1。
+6. ​
+   ​

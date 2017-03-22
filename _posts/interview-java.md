@@ -1,3 +1,37 @@
+# 引用
+
+Java中一共有四种类型的引用。StrongReference、 SoftReference、 WeakReference 以及 PhantomReference。
+
+- StrongReference 是 Java 的默认引用实现, 它会尽可能长时间的存活于 JVM 内，当没有任何对象指向它时将会被GC回收
+- WeakReference，顾名思义, 是一个弱引用, 当所引用的对象在 JVM 内不再有强引用时, 将被GC回收
+- 虽然 WeakReference 与 SoftReference 都有利于提高 GC 和 内存的效率，但是 WeakReference ，一旦失去最后一个强引用，就会被 GC 回收，而 SoftReference 会尽可能长的保留引用直到 JVM 内存不足时才会被回收(虚拟机保证), 这一特性使得 SoftReference 非常适合缓存应用
+
+
+
+
+# 线程
+
+生命周期
+
+1. NEW  新建
+2. RUNNABLE 就绪，可调度
+3. RUNNING 运行
+4. DEAD 结束
+5. BLOCKED 被阻塞
+
+```
+NEW -> RUNNABLE -> RUNNING -> DEAD
+                \            \
+                 \-> BLOBKED  \
+```
+
+thread.setDaemon(true)必须在thread.start()之前设置，否则会跑出一个IllegalThreadStateException异常
+
+在Daemon线程中产生的新线程也是Daemon
+
+​                         
+
+
 #  ThreadPool
 
 ## 作用
@@ -45,7 +79,7 @@
 
 
 
-## 动态代理
+# 动态代理
 
 ## InvocationHandler
 
@@ -83,4 +117,160 @@ public static <T> T proxying(T target, Class<T> iface) {
 ```
 
 [Ref] https://opencredo.com/dynamic-proxies-java-part-2/
+
+
+
+# Memory Area
+
+## 区域
+
+- 不受GC管理的内存都是native memory；受GC管理的内存叫做GC heap或者managed heap
+
+
+
+## 对象内存布局
+
+HotSpot VM:
+
+- 继承深度越浅的类所声明的字段越靠前，继承深度越深的类所声明的字段越靠后
+- 每个字段按照其宽度来对齐
+- 字段不参与多态。派生类如果声明了跟基类同名的字段，则两个字段在最终的实例中都会存在
+- 可以使用jol工具查看内存布局
+
+```
++-------------------+-------------------------+
+|                   |                         | 
+|     _mark         |      _kclass            | 
+|                   |                         | 
++-------------------+-------------------------+
+|  +-----+-----+------+-----------+---------+ |
+|  | l/d | i/f | s/ch | byte/bool |  ref    | |
+|  +-----+-----+------+-----------+---------+ |
+|  |      ... (extend_field)                | |
+|  +----------------------------------------+ |
++---------------------------------------------+
+```
+
+[ Ref ]
+
+- https://www.zhihu.com/question/50258991/answer/120450561
+
+
+
+## 类数据内存布局
+
+- 对象、类的元数据（InstanceKlass）、类的Java镜像，三者之间的关系：
+
+```
+Java object      InstanceKlass       Java mirror
+ [ _mark  ]                          (java.lang.Class instance)
+ [ _klass ] --> [ ...          ] <-\              
+ [ fields ]     [ _java_mirror ] --+> [ _mark  ]
+                [ ...          ]   |  [ _klass ]
+                                   |  [ fields ]
+                                    \ [ klass  ]
+```
+
+- 在JDK 7或之前的HotSpot VM里，InstanceKlass是被包装在由GC管理的klassOopDesc对象中，存放在GC堆中的所谓Permanent Generation（简称PermGen）中
+- 从JDK 8开始的HotSpot VM则完全移除了PermGen，改为在native memory里存放这些元数据。新的用于存放元数据的内存空间叫做Metaspace，InstanceKlass对象就存在这里。
+
+[ Ref ]
+
+- https://www.zhihu.com/question/50258991/answer/120450561
+
+
+
+## 静态变量
+
+- 静态变量存储在方法区中的数据区里。
+- OpenJDK6-, HotSpot VM，静态字段依附在InstanceKlass对象的末尾
+- OpenJDK7+, HotSpot VM, 静态变量存储在java.lang.Class对象末尾的隐藏字段里，而java.lang.Class对象存储在普通的Java heap里
+
+[ Ref ]
+
+- https://www.zhihu.com/question/50258991/answer/120450561
+
+
+## 常量池
+
+1.Class文件中的常量池
+
+这里面主要存放两大类常量：字面量(Literal)：文本字符串等；符号引用(Symbolic References)：属于编译原理方面的概念，包含三类常量：类和接口的全限定名(Full Qualified Name)字段的名称和描述符(Descriptor)方法的名称和描述符
+
+
+
+
+# Concurrent
+
+## CountDownLatch
+
+- 某个线程需要等待一个或多个线程操作结束（或达到某种状态）才开始执行
+
+
+
+## CyclicBarrier
+
+- CyclicBarrier是让多个线程互相等待某一事件的发生，然后同时被唤醒
+
+
+
+
+
+
+# GC
+
+Stop-the-world 会显著影响应用性能，JVM调优主要围绕这减少停顿时间为目的。
+
+一般垃圾回收算法会对堆会分代。新生代和老年代。为什么会分代？新生代用于分配快用快销的对象的内存，减少扫描区域从而减少暂停时间。
+
+当迁移到老年区的对象大小大于老年区可用内存时，将有可能引发Full GC，最为影响程序性能的操作。
+
+并发GC在减少响应时间的同时，可能会增加CPU运算开销。
+
+
+
+-XX:+UseSerialGC 使用单线程并行GC ，部分GC和全GC都是全暂停。
+
+-XX:+UseParallelOldGC 使用并行GC，部分GC和全GC都是全暂停，使用多个线程进行回收。
+
+-XX:+UseParNewGC 使用CMS GC，部分GC全暂停，全GC尽量减少暂停时间，并发标记，代价是CPU开销以及内存碎片，需要时切换为SerialGC整理内存。
+
+-XX:+UseG1GC 使用G1算法，针对大堆内存应用，实现并发显著减少老年区回收时的暂停时间。
+
+尽量不使用System.gc()，会引发Full GC，可以通过-XX:+DisableExplicitGC设置禁止调用
+
+需要Full GC的场景：
+
+- GC 算法本身触发条件
+- 做内存测试
+- 做Heap Dump
+- RMI 每小时调用http://blog.csdn.net/chenleixing/article/details/46706039
+
+
+
+
+
+
+- ConcurrentHashMap size() 实现？一致性？
+
+- 为什么编译器、CPU会对指令进行乱序？
+
+- synchronize 锁怎样实现？ 偏向锁？
+
+- ThreadLocal 会不会内存泄露，内部map实现的WeakReference？
+
+- 二级索引命中会有几次索引查询 ？？
+
+- Mysql MVCC怎么解决幻读问题？2PL？版本存储策略？间隙锁？ 和聚簇索引
+
+  的关系？
+
+- 数据库和缓存的一致性如何保证？
+
+- 结果100万数据做分页查询，查询第90万条怎样优化？
+
+  ​
+
+
+
 
