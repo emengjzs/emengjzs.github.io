@@ -1,4 +1,4 @@
-# MVCC
+# CC
 
 目的：解决ACI。
 
@@ -69,6 +69,16 @@ https://en.wikipedia.org/wiki/Thomas_write_rule
 1使用共享锁，2-5使用互斥锁
 
 对于update或者delete的数据集，其加锁过程是逐条加锁的，先读取，后加锁返回，再对数据行进行更新。
+
+每个数据行会有三个隐藏字段：DB_TRX_ID 记录最近的插入或更新（删除将视作更新，通过标志位区别）的事务ID，`DB_ROLL_PTR` 是指向undo日志的指针，undo日志包含了数据的历史更新版本的存储，用来实现**事务回滚**以及**保证读一致性**，日志包含插入日志和更新日志。DB_ROW_ID 记录行的自增ID。
+
+行数据的版本存储使用Diff的形式存储不同历史版本数据之间的差异，需要时计算出历史版本的数据。更新日志只有当没有可能读取旧版本快照的事务时才可删除。
+
+对于事务中删除的数据，只有当事务提交后才根据undo日志真正删除物理行
+
+
+
+对版本数据即undo日志的回收过程称为[purge](https://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_purge)，
 
 ## SQLLite
 
