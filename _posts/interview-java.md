@@ -74,6 +74,20 @@ thread.setDaemon(true)必须在thread.start()之前设置，否则会跑出一�
 
 
 
+## ConcurrentHashMap
+
+size(), 使用的算法和LongAdder相同
+
+## LongAdder
+
+- Add：采用逐步策略的手段更新值，先对base进行CAS add此时性能和**AtomicLong**相近，失败时向Cell分段更新，根据Thread的hashcode映射到Cell数组中的某个元素，向该元素更新值。
+- Cell：对Cell进行Padding（增加无用字段），减少cache contention，避免多个core对同一个cache块的争用。
+- Sum：会统计base和Cell的值。
+
+
+
+
+
 
 # 动态代理
 
