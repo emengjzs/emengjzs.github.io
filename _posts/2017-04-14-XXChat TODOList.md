@@ -1,6 +1,14 @@
+---
+title: XXChat TODOList
+layout: post
+tag: 
+   - important
+   - C++
+header-img: img/friends.PNG
+---
 XXChat TODOList
 
-这周要忙作业的事情，争取下周把这周做完吧，算法要加强！！
+这周要忙作业的事情，争取下周把这些做完吧，算法要加强！！
 
 1. 合并两个有序链表为有序链表。
 2. 合并多个链表为有序链表。
