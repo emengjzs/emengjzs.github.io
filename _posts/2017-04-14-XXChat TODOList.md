@@ -10,7 +10,7 @@ XXChat TODOList
 
 这周要忙作业的事情，争取下周把这些做完吧，算法要加强！！
 
-- [ ] 合并两个有序链表为有序链表。
+- [x] 合并两个有序链表为有序链表。
 - [ ] 合并多个链表为有序链表。
 - [ ] 翻转数组找出最小的元素位置。
 - [ ] Reactor模式下QPS的计算。
@@ -19,6 +19,43 @@ XXChat TODOList
 - [ ] HTTP服务的简单架构。
 - [ ] FIFO Buffer的实现。
 - [ ] 完全二叉树的最小子树。
+
+
+
+
+## 1 合并两个有序链表为有序链表 
+
+leetcode题目：[merge-two-lists](https://leetcode.com/problems/merge-two-sorted-lists/#/description)
+
+### 题解：
+
+- 迭代：不要忘记对合并链表的指针cur，两个链表的指针p、q进行迭代 ： p=p->next。
+- 初始条件：可以先就地构造一个Dummy Head Node，不用额外判断头节点究竟是p还是q，直接进入主逻辑。
+- 结尾：当某一个链表遍历完时，**直接将另一个链表的链接到合并链表尾**，**拜托不用再遍历余下的了**。
+- 返回：Dummy Head Node的next指针即可
+
+```c++
+ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+  ListNode head(-1);
+  ListNode* p = l1;
+  ListNode* q = l2;
+  ListNode* cur = &head;
+  while (p && q) {
+    if (p->val < q->val) {
+      cur->next = p;
+      p = p->next;
+    }
+    else {
+      cur->next = q;
+      q = q->next; 
+    }
+    cur = cur->next;
+  }
+  cur->next = p ? p : q;
+  return head.next;
+}
+```
+
 
 
 
