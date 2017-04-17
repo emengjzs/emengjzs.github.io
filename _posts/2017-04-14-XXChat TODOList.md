@@ -8,7 +8,7 @@ header-img: img/friends.PNG
 ---
 XXChat TODOList
 
-这周要忙作业的事情，争取下周把这些做完吧，算法要加强！！
+打算开一本书 gitbook， 总结常见算法题和易错点，真的被逼的没办法了，死记也好理解也好一定要把算法这关啃下来，毫无疑问leecode是要刷一遍的，不然连门都进不了，既然这么喜欢考算法，就练给你看。
 
 - [x] 合并两个有序链表为有序链表。
 - [ ] 合并多个链表为有序链表。
@@ -55,6 +55,49 @@ ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
   return head.next;
 }
 ```
+
+
+
+
+
+## 3  翻转数组找出最小的元素位置
+
+Leetcode 题目：[Find Minimum in Rotated Sorted Array II](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/#/description)
+
+### 题解:
+
+1. **有序性**： 要立刻想到二分法（数组、矩阵、二叉平衡树等）同时需要考虑一下一些情况。
+   - 是`low < high` 还是 `low <= high`? 前一个跳出循环时是low == high, 后一个跳出循环时是 high + 1 == low。一个是寻找的值在low中，一个寻找的值在high和low之间。
+   - 考虑部分元素相等的情况，特别是**全部元素相等**的情况。此题中，如果n[low]==n[high]，1. 分裂点在中间，遍历找最小值，找出第一个变小的。 2. 由头到尾都是一样的，low对应元素即解。
+2. midval 跟谁判断？如果和low判断，则无法判断数组进行了反转，此时最小值有可能在low 和 mid右边
+
+```cpp
+int findMin(vector<int>& nums) {
+  int low = 0;
+  int high = nums.size() - 1;
+  while (low < high) {
+    int mid = low + ((high - low) >> 1);
+    int midval = nums[mid];
+    if (midval > nums[high]) {
+      low = mid + 1;
+    }
+    else if (midval < nums[high]) {
+      high = mid;
+    }
+    else {
+      for (int i = low ; i < high; i ++) {
+        if (nums[i + 1] < nums[i]) {
+          return nums[i + 1];
+        }
+      }
+      return nums[low];
+    }
+  }
+  return nums[low];
+}
+```
+
+
 
 
 
@@ -112,14 +155,14 @@ class BinaryHexViewer : public BinaryViewer {
   virtual void Output(std::string str) override {
     for (int i = 0; i < 16; i++) {
       if (i < str.size())
-        printf("%.2X ", str[i]);
+        printf("%02X ", str[i]);
       else
         printf("   ");
     }
     printf(" ");
     for (int i = 16; i < 32 && i < str.size(); i++) {
       if (i < str.size())
-        printf("%.2X ", str[i]);
+        printf("%02X ", str[i]);
       else
         printf("   ");
     }
@@ -160,7 +203,7 @@ class AddressViewer : public BinaryViewerDecorator {
       : BinaryViewerDecorator(viewer), _addr(0) {}
   virtual ~AddressViewer() {}
   virtual void Output(std::string str) override {
-    printf("0x%.8X ", _addr);
+    printf("0x%08X ", _addr);
     _addr += 32;
     InnerOutput(str);
   }
