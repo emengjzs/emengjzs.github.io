@@ -11,7 +11,7 @@ XXChat TODOList
 打算开一本书 gitbook， 总结常见算法题和易错点，真的被逼的没办法了，死记也好理解也好一定要把算法这关啃下来，毫无疑问leecode是要刷一遍的，不然连门都进不了，既然这么喜欢考算法，就练给你看。
 
 - [x] 合并两个有序链表为有序链表。
-- [ ] 合并多个链表为有序链表。
+- [x] 合并多个链表为有序链表。
 - [ ] 翻转数组找出最小的元素位置。
 - [ ] Reactor模式下QPS的计算。
 - [ ] 回环矩阵下某一下标对应的值。
@@ -52,6 +52,46 @@ ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
     cur = cur->next;
   }
   cur->next = p ? p : q;
+  return head.next;
+}
+```
+
+
+
+## 2 合并多个链表为有序链表
+
+### 题解
+
+主要难点是C++ STL下的API，思路倒是知道。但各种挂在std:: 命名空间的函数以及蛋疼的命名，用法。
+
+1. `make_heap`将数组建堆
+2.  `pop_heap`将最值放在最后位置，然后忽略最后的元素对前面元素数组重新调整为堆。**调用后**使用`back()`获取最值，调用一次`pop_back()`去除最值元素。
+3.  `push_heap` 将新的值放在最后位置，然后包含最后的元素对数组重新调整为堆。**调用前**使用一次`push_back`添加元素。
+4. `sort_heap`按堆排序算法进行排序。
+5. 不要忘记自定义排序函数。
+
+```c++
+ListNode* mergeKLists(vector<ListNode*>& lists) {
+  ListNode head(-1);
+  vector<ListNode*> validLists;
+  for(ListNode* node : lists) {
+    if (node) validLists.push_back(node);
+  }
+  auto cmp = [](ListNode* o1, ListNode* o2) { return o1->val > o2->val; };
+  make_heap(validLists.begin(), validLists.end(), cmp);
+  ListNode* cur = &head;
+  while (! validLists.empty()) {
+    pop_heap(validLists.begin(), validLists.end(), cmp);
+    cur->next = validLists.back();
+    validLists.back() = (validLists.back())->next;
+    if (validLists.back()) {
+      push_heap(validLists.begin(), validLists.end(), cmp);
+    }
+    else {
+      validLists.pop_back();
+    }
+    cur = cur->next;
+  }
   return head.next;
 }
 ```
