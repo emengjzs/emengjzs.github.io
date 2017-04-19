@@ -147,7 +147,7 @@ Leetcode题目：[59. Spiral Matrix II](https://leetcode.com/problems/spiral-mat
 1. 一图胜千言。把矩阵分解为一圈一圈的环。
 2. 考虑当跳出循环时，在循环条件中使用的变量的值，一般来说此时变量的值是**越界值**，例如用下标i遍历数组后i的值不再可用，**控制跳出循环时变量**的值能够避免异常发生。
 
-![matrix](..\img\xxchat\matrix.png)
+![matrix](\img\xxchat\matrix.png)
 
 ```c++
 vector<vector<int>> generateMatrix(int n) {
