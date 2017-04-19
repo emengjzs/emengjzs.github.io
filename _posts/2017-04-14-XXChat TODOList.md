@@ -10,11 +10,10 @@ XXChat TODOList
 
 打算开一本书 gitbook， 总结常见算法题和易错点，真的被逼的没办法了，死记也好理解也好一定要把算法这关啃下来，毫无疑问leecode是要刷一遍的，不然连门都进不了，既然这么喜欢考算法，就练给你看。
 
-- [x] 合并两个有序链表为有序链表。
-- [x] 合并多个链表为有序链表。
-- [ ] 翻转数组找出最小的元素位置。
+- [x] 合并有序链表。
+- [x] 翻转数组找出最小的元素位置。
 - [ ] Reactor模式下QPS的计算。
-- [ ] 回环矩阵下某一下标对应的值。
+- [x] 回环矩阵下某一下标对应的值。
 - [ ] 文本过滤词分析算法。
 - [ ] HTTP服务的简单架构。
 - [ ] FIFO Buffer的实现。
@@ -56,17 +55,17 @@ ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
 }
 ```
 
+## 合并多个链表为有序链表
 
-
-## 2 合并多个链表为有序链表
+leetcode题目：[23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
 
 ### 题解
 
 主要难点是C++ STL下的API，思路倒是知道。但各种挂在std:: 命名空间的函数以及蛋疼的命名，用法。
 
 1. `make_heap`将数组建堆
-2.  `pop_heap`将最值放在最后位置，然后忽略最后的元素对前面元素数组重新调整为堆。**调用后**使用`back()`获取最值，调用一次`pop_back()`去除最值元素。
-3.  `push_heap` 将新的值放在最后位置，然后包含最后的元素对数组重新调整为堆。**调用前**使用一次`push_back`添加元素。
+2. `pop_heap`将最值放在最后位置，然后忽略最后的元素对前面元素数组重新调整为堆。**调用后**使用`back()`获取最值，调用一次`pop_back()`去除最值元素。
+3. `push_heap` 将新的值放在最后位置，然后包含最后的元素对数组重新调整为堆。**调用前**使用一次`push_back`添加元素。
 4. `sort_heap`按堆排序算法进行排序。
 5. 不要忘记自定义排序函数。
 
@@ -139,8 +138,55 @@ int findMin(vector<int>& nums) {
 
 
 
+## 4 输出回环矩阵
+
+Leetcode题目：[59. Spiral Matrix II](https://leetcode.com/problems/spiral-matrix-ii/#/description)
+
+### 题解:
+
+1. 一图胜千言。把矩阵分解为一圈一圈的环。
+2. 考虑当跳出循环时，在循环条件中使用的变量的值，一般来说此时变量的值是**越界值**，例如用下标i遍历数组后i的值不再可用，**控制跳出循环时变量**的值能够避免异常发生。
+
+![matrix](..\img\xxchat\matrix.png)
+
+```c++
+vector<vector<int>> generateMatrix(int n) {
+  vector<vector<int>> result(n, vector<int>(n));
+  int v = 1;
+  for (int i = 0; i <= n / 2; i ++) {
+    int x = i;
+    int y = i;
+    while (y < n -1 - i) 
+      result[x][y ++] = v ++;
+    while (x < n -1 - i) 
+      result[x ++][y] = v ++;
+    while(y > i) 
+      result[x][y --] = v ++;
+    while(x > i)
+      result[x --][y] = v ++;
+  }
+  if (n % 2) result[n / 2][n / 2] = v;
+  return result;
+}
+```
 
 
+
+## 回环矩阵下某一下标对应的值。
+
+### 题解:
+
+1. 先判断所在层数i，由上图可知，层数是点到四条边距离的最小值。
+
+2. 计算一层的周长，为4(L- 1)，L为边长。
+
+3. 第k层的边长为L = n - 2k，故周长为4(n - 2k - 1)
+
+4. 得到层数为i后，计算第0~i-1层的周长和，计算到（i，i）处的值。
+
+5. 若 x == i ，点在上方，若 y == n - 1-i点在右方，若x == n - 1 点在下方，若y == i 点在左方
+
+   ​
 
 ## 10 二进制文件显示的实现
 
