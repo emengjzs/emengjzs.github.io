@@ -1,14 +1,14 @@
 ---
-title: XXChat TODOList
+title: 某Chat面试题总结
 layout: post
 tag: 
    - important
    - C++
 header-img: img/friends.PNG
 ---
-XXChat TODOList
 
-打算开一本书 gitbook， 总结常见算法题和易错点，真的被逼的没办法了，死记也好理解也好一定要把算法这关啃下来，毫无疑问leecode是要刷一遍的，不然连门都进不了，既然这么喜欢考算法，就练给你看。
+打算开一本书 gitbook， 总结常见算法题和易错点，真的被逼的没办法了，死记也好理解也好一定要把算法这关啃下来，毫无疑问leecode是要刷一遍的，不然连门都进不了。
+GitBook 地址：[emeng-interview](https://www.gitbook.com/book/emengjzs/emeng-interview/details)
 
 - [x] 合并有序链表。
 - [x] 翻转数组找出最小的元素位置。
