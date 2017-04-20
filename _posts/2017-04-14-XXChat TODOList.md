@@ -308,3 +308,32 @@ int main() {
 }
 ```
 
+
+
+##  ## 满二叉树的包含三个节点的最小子树
+
+1. 没有必要知道第i个元素的对应值是多少，对应值是可以拿出来的。
+2. 充分利用二叉树的**二分性质**，来确定最小子树的根节点对应的位置。
+3. 满二叉树保证**中点即顶点**。
+
+```c++
+int getMinTreeInCompleteTree(const vector<int>& arr, int v1, int v2, int v3) {
+  int low = 0;
+  int high = arr.size();
+  int min_val = min(v1, v2, v3);
+  int max_val = max(v1, v2, v3);
+  while (low <= high) {
+    int mid = arr[low + (low - high) / 2];
+    int mid_val = arr[mid];
+    if (mid_val > max_val) {
+      high = mid - 1;
+    } else if (mid_val < min_val) {
+      low = mid + 1;
+    } else {
+      return mid_val;
+    }
+  }
+  return low;
+}
+```
+
