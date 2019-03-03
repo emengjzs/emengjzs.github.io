@@ -35,7 +35,7 @@ repository: emengjzs/emengjzs.github.io
 gems: [jekyll-paginate]
 
 # Disqus settings
-#disqus_username: _your_disqus_short_name_
+disqus_username: emengjzs
 
 # Duoshuo settings
 # duoshuo_username: huxblog
